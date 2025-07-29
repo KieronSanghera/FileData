@@ -1,22 +1,15 @@
 use axum::{
-    routing::{get, post},
     Router,
-    extract::{
-        DefaultBodyLimit,
-    }
-};
-use tower_http::trace::{TraceLayer};
-use uploader::routes::{
-    health,
-    upload
+    extract::DefaultBodyLimit,
+    routing::{get, post},
 };
 use tokio::{net::TcpListener, signal};
+use tower_http::trace::TraceLayer;
+use uploader::routes::{health, upload};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    tracing_subscriber::fmt()
-        .with_env_filter("info")
-        .init();
+    tracing_subscriber::fmt().with_env_filter("info").init();
 
     tracing::info!("Starting Uploader");
 
@@ -47,8 +40,9 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-
 async fn shutdown_signal() {
-    signal::ctrl_c().await.expect("failed to listen for shutdown");
+    signal::ctrl_c()
+        .await
+        .expect("failed to listen for shutdown");
     tracing::info!("Signal received, shutting down...");
 }
